@@ -1,10 +1,12 @@
 import express from "express";
 import ProductController from "../Controller/productController";
+import uploaded from "../MiddleWares/uploadImage";
+import verifyAccess from "../MiddleWares/verifyAccess";
 
 
 const router=express.Router()
 
-router.post("/",ProductController.postProduct)
+router.post("/",verifyAccess("user"),uploaded,ProductController.postProduct);
 router.get("/",ProductController.getProduct)
 router.delete("/",ProductController.delleteAllProduct)
 router.get("/:id",ProductController.getOneProduct)

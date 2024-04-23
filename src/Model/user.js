@@ -24,6 +24,11 @@ const userSchema=new mongoose.Schema({
     confirmPassword:{
         type:String,
     },
+    role:{
+        type:String,
+        enum:["user","admin"],
+        default:"user"
+    },
     PostedDate:{
         type:Date,
         default:Date.now()

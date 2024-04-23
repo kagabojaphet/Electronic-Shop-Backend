@@ -5,7 +5,9 @@ import successmessage from "../Utils/successMessage";
 class ProductController{
     static async postProduct(req,res){
         try {
-            const product=await Product.create(req.body)
+            const{productName,productTitle,productDescription,productCategory,productPrice,productDiscount}=req.body
+            const productImage = req.file ? req.file.path : null;
+            const product=await Product.create({productName,productTitle,productDescription,productCategory,productPrice,productDiscount,productImage})
             if(!product){
                 return errormessage(res,401,`Product Not Posted`)
             }

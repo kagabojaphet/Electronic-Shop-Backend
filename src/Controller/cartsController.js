@@ -9,7 +9,7 @@ class CartController{
     static async addToCart(req,res){
         try {
             const productId=req.params.id
-            const {userId}=req.body
+            const userId = req.user._id
             if(productId.length !==24 || productId.length <24){
                 return errormessage(res,401,`Invalid ID`)
             }
@@ -18,7 +18,7 @@ class CartController{
                 return errormessage(res,404,`Product Not Found`)
             }
             
-                let cart=await Carts.findOne({userId});
+                let cart=await Carts.findOne({user:userId});
                 if(!cart){
                     cart =new Carts({userId,products:[]});
                 }
@@ -45,6 +45,20 @@ class CartController{
             }
             else{
                 return successmessage(res,200,`Product Successfuly ${cart.length} retrieved`,cart)
+            }
+        } catch (error) {
+            return errormessage(res,500,`error: ${error}`)
+        }
+    }
+
+    static async deleteAll(req,res){
+        try {
+            const cart=await Carts.deleteMany()
+            if(!cart){
+                return errormessage(res,401,`Product Not Deleted`)
+            }
+            else{
+                return successmessage(res,200,`Product Successfuly Deleted`)
             }
         } catch (error) {
             return errormessage(res,500,`error: ${error}`)

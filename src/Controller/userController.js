@@ -7,7 +7,7 @@ import Jwt from "jsonwebtoken";
 class UserController{
     static async postUser(req,res){
         try {
-            const{firstName,lastName,email,phoneNumber,password,confirmPassword}=req.body
+            const{firstName,lastName,email,phoneNumber,role,password,confirmPassword}=req.body
             if(phoneNumber.length !==10 || phoneNumber <10){
                 return errormessage(res,401,`PhoneNumber length is 10, please check that!`)
             }else{
@@ -16,7 +16,7 @@ class UserController{
                 }
                 else{
                     const hashPassword=bcrypt.hashSync(req.body.password,10)
-                    const user=await User.create({firstName,lastName,email,phoneNumber,password:hashPassword})
+                    const user=await User.create({firstName,lastName,email,phoneNumber,role,password:hashPassword})
                     if(!user){
                         return errormessage(res,401,`User Not Created`)
                     }
@@ -43,6 +43,20 @@ class UserController{
         } catch (error) {
             return errormessage(res,500,`error: ${error}`)
         }
+    }
+
+    static async deleteAll(req,res){
+      try {
+        const user=await User.deleteMany()
+        if(!user){
+            return errormessage(res,401,`Users Not Deleted`)
+        }
+        else{
+            return successmessage(res,200,`Users successfuly Deleted`)
+        }
+      } catch (error) {
+        return errormessage(res,500,`error: ${error}`)
+      }
     }
 
     static async login(req,res){

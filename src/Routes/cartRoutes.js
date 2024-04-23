@@ -1,9 +1,11 @@
 import express from "express";
 import CartController from "../Controller/cartsController";
+import verifyAccess from "../MiddleWares/verifyAccess";
 
 const router=express.Router()
 
-router.post("/:id",CartController.addToCart)
+router.post("/:id",verifyAccess("user"),CartController.addToCart)
 router.get("/",CartController.getAll)
+router.delete("/",CartController.deleteAll)
 
 export default router
