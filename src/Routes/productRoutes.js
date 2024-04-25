@@ -6,7 +6,7 @@ import verifyAccess from "../MiddleWares/verifyAccess";
 
 const router=express.Router()
 
-router.post("/",verifyAccess("user"),uploaded,ProductController.postProduct);
+router.post("/",uploaded,ProductController.postProduct);
 router.get("/",ProductController.getProduct)
 router.delete("/",ProductController.delleteAllProduct)
 router.get("/:id",ProductController.getOneProduct)
