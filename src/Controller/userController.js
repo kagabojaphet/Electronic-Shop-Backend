@@ -45,6 +45,24 @@ class UserController{
         }
     }
 
+    static async deleteOne(req,res){
+        try {
+            const idParams=req.params.id
+            if(idParams.length !==24 || idParams.length <24){
+                return errormessage(res,401,`User with ID ${idParams} Not Found`)
+            }
+            const user=await User.findByIdAndDelete(idParams)
+            if(!user){
+                return errormessage(res,401,`User Not Deleted`)
+            }
+            else{
+                return successmessage(res,200,`User Successfuly Deleted`)
+            }
+        } catch (error) {
+            return errormessage(res,500,`Error: ${error}`)
+        }
+    }
+
     static async deleteAll(req,res){
       try {
         const user=await User.deleteMany()
@@ -57,6 +75,21 @@ class UserController{
       } catch (error) {
         return errormessage(res,500,`error: ${error}`)
       }
+    }
+
+    static async update(req,res){
+        try {
+            const idParams=req.params.id
+            const user=await User.findByIdAndUpdate(idParams,req.body,{new:true})
+            if(!user){
+                return errormessage(res,401,`User Not Updated`)
+            }
+            else{
+                return successmessage(res,200,`User Successfuly Updated`,user)
+            }
+        } catch (error) {
+            return errormessage(res,500,`Error: ${error}`)
+        }
     }
 
     static async login(req,res){

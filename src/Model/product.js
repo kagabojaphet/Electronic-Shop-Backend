@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const productSchema=new mongoose.Schema({
+    productImage:{
+        type:String,
+        required:true
+    },
     productName:{
         type:String,
         required:true
@@ -23,10 +27,6 @@ const productSchema=new mongoose.Schema({
     },
     productDiscount:{
         type:Number,
-        required:true
-    },
-    productImage:{
-        type:String,
         required:true
     },
     postDate:{
