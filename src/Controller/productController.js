@@ -1,13 +1,25 @@
 import Product from "../Model/product";
 import errormessage from "../Utils/errorMessage";
 import successmessage from "../Utils/successMessage";
+import cloudinary from "../Utils/cloud";
 
 class ProductController{
     static async postProduct(req,res){
         try {
             const{productName,productTitle,productDescription,productCategory,productPrice,productDiscount}=req.body
             const productImage = req.file ? req.file.path : null;
-            const product=await Product.create({productName,productTitle,productDescription,productCategory,productPrice,productDiscount,productImage})
+            if (!req.file) {
+                return errormessage(res, 400, 'Please upload a product image.');
+              }
+        
+              
+              const result = await cloudinary.uploader.upload(req.file.path, {
+                folder: 'product',
+              });
+            const product=await Product.create({ productImage: {
+                public_id: result.public_id,
+                url: result.secure_url,
+              },productName,productTitle,productDescription,productCategory,productPrice,productDiscount})
             if(!product){
                 return errormessage(res,401,`Product Not Posted`)
             }
