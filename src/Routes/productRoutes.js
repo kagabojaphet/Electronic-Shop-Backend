@@ -8,9 +8,11 @@ const router=express.Router()
 
 router.post("/",uploaded,ProductController.postProduct);
 router.get("/",ProductController.getProduct)
+router.get("/search",ProductController.searchProduct)
 router.delete("/",ProductController.delleteAllProduct)
 router.get("/:id",ProductController.getOneProduct)
 router.delete("/:id",ProductController.DeleteOneProduct)
 router.patch("/:id",ProductController.update)
+
 
 export default router
