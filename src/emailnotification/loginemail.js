@@ -1,7 +1,7 @@
 
 import nodemailer from "nodemailer"
 
-const notifyForSignup=async(alluserInf)=>{
+const notifyForLogin=async(alluserInf)=>{
     let transporter=nodemailer.createTransport({
         host:"smtp.gmail.com",
         port:465,
@@ -16,7 +16,7 @@ const notifyForSignup=async(alluserInf)=>{
         to:alluserInf.email,
         subject:`${alluserInf.firstName} Now we have new vister of our website`,
         html: `<p>Dear, <b>${alluserInf.firstName} ${alluserInf.lastName}</b></p><br/><br/> 
-    <p>We have new person added in user of our website</p><br/><br/>
+    <p>We notify you that we have user who login in our websit</p><br/><br/>
     <p>click the link <a href="https://gfj-electronic-shop.vercel.app/">to vist our website</a></p>`,
     }
     transporter.sendMail(maiOptions,function(err,info){
@@ -27,4 +27,4 @@ const notifyForSignup=async(alluserInf)=>{
         }
     })
 }
-export default notifyForSignup
+export default notifyForLogin
