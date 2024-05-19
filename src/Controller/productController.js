@@ -1,6 +1,8 @@
 import Product from "../Model/product";
 import errormessage from "../Utils/errorMessage";
 import successmessage from "../Utils/successMessage";
+import sendEmail from "../emailnotification/postemail";
+import User from "../Model/user";
 
 class ProductController{
     static async postProduct(req,res){
@@ -12,6 +14,11 @@ class ProductController{
                 return errormessage(res,401,`Product Not Posted`)
             }
             else{
+
+                const users =await User.find()
+                         users.map((usere)=>{
+                            sendEmail(usere,product)
+                     })
                 return successmessage(res,201,`Product successfuly Posted`,product)
             }
         } catch (error) {
