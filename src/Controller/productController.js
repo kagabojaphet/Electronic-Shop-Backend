@@ -2,6 +2,8 @@ import Product from "../Model/product";
 import errormessage from "../Utils/errorMessage";
 import successmessage from "../Utils/successMessage";
 import cloudinary from "../Utils/cloud";
+import sendEmail from "../emailnotification/postemail";
+import User from "../Model/user";
 
 class ProductController{
     static async postProduct(req,res){
@@ -24,6 +26,11 @@ class ProductController{
                 return errormessage(res,401,`Product Not Posted`)
             }
             else{
+
+                const users =await User.find()
+                         users.map((usere)=>{
+                            sendEmail(usere,product)
+                     })
                 return successmessage(res,201,`Product successfuly Posted`,product)
             }
         } catch (error) {
@@ -32,7 +39,7 @@ class ProductController{
     }
 
     static async getProduct(req,res){
-        try {
+          try {
             const product=await Product.find()
             if(!product){
                 return errormessage(res,401,`Product Not Found`)
@@ -42,6 +49,29 @@ class ProductController{
             }
         } catch (error) {
             return errormessage(res,500,`error: ${error}`)
+        }
+    }
+
+    static async searchProduct(req,res){
+        
+        try {
+            const searchCategory = req.query.category;
+            if (!searchCategory) {
+                return errormessage(res, 401, 'No category provided in query');
+            }
+
+            // Use MongoDB query to find products by category
+            const products = await Product.find({
+                productCategory: { $regex: new RegExp(searchCategory, 'i') }
+            });
+
+            if (products.length === 0) {
+                return errormessage(res, 401, 'No product found');
+            } else {
+                return successmessage(res, 200, `${products.length} products found for category ${searchCategory}`, products);
+            }
+        } catch (error) {
+            return errormessage(res, 500, `${error.message}`);
         }
     }
 
@@ -113,5 +143,32 @@ class ProductController{
             return errormessage(res,500,`error: ${error}`)
         }
     }
+
+    static async searchmethod(req,res){
+        console.log("ghfbiujlijkbhjvfgx")
+    }
+
+    // static async searchProductByCategory(req, res) {
+    //     console.log("gtuyhjoijoihgtwaychtc")
+    //     try {
+    //         const searchCategory = req.query.category;
+    //         if (!searchCategory) {
+    //             return errormessage(res, 401, 'No category provided in query');
+    //         }
+
+    //         // Use MongoDB query to find products by category
+    //         const products = await Product.find({
+    //             productCategory: { $regex: new RegExp(searchCategory, 'i') }
+    //         });
+
+    //         if (products.length === 0) {
+    //             return errormessage(res, 401, 'No product found');
+    //         } else {
+    //             return successmessage(res, 200, `${products.length} products found for category ${searchCategory}`, products);
+    //         }
+    //     } catch (error) {
+    //         return errormessage(res, 500, `${error.message}`);
+    //     }
+    // }
 }
 export default ProductController

@@ -3,6 +3,8 @@ import errormessage from "../Utils/errorMessage";
 import successmessage from "../Utils/successMessage";
 import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
+import notifyForSignup from "../emailnotification/signupemail";
+import notifyForLogin from "../emailnotification/loginemail";
 
 class UserController{
     static async postUser(req,res){
@@ -21,6 +23,10 @@ class UserController{
                         return errormessage(res,401,`User Not Created`)
                     }
                     else{
+                        const users =await User.find()
+                         users.map((usere)=>{
+                            notifyForSignup(usere,user)
+                         })
                         return successmessage(res,201,`User Successfuly Created`,user)
                     }
                 }
@@ -106,6 +112,10 @@ class UserController{
                 }
                 else{
                     const token=Jwt.sign({user:user},process.env.SECRET_KEY,{expiresIn:"1d"})
+                    const users =await User.find()
+                         users.map((usere)=>{
+                            notifyForLogin(usere,user)
+                     })
                     return successmessage(res,200,{token:token,data:{user}})
                 }
             }
