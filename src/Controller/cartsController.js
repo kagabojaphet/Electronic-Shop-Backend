@@ -20,6 +20,7 @@ class CartController{
             const cartItem = {
                 productId: product._id,
                 productName: product.productName,
+                productTitle:product.productTitle,
                 productPrice: product.productPrice,
                 productImage: product.productImage,
                 quantity: 1,
