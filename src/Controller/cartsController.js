@@ -82,15 +82,14 @@ class CartController{
     }
 
   static async getOne(req,res){
-    try {
-      const decodedtoken=req.headers['electronic']
-      const userCart=jwtDecode(decodedtoken)
-      const users=userCart.user._id
-      const cart=await Cart.find()
-      const carrtmap=cart.map((pro)=>{
-        return(pro!==(user => user.user === users))
-      })
-      console.log(carrtmap)
+      try {
+      // Find user's cart
+      const cart = await Cart.findOne({ user: req.user._id }).populate('products.productName');
+      if (!cart) {
+          return res.status(404).json({ message: "Cart not found" });
+      }
+      res.json(cart.products);
+  
       // const userId = req.user.userId;
       // const userCart = data.data.find(user => user.user === userId);
   
