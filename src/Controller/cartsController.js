@@ -3,6 +3,7 @@ import Cart from "../Model/carts"
 import Product from "../Model/product";
 import errormessage from "../Utils/errorMessage";
 import successmessage from "../Utils/successMessage";
+import { jwtDecode } from "jwt-decode";
 
 
 class CartController{
@@ -66,7 +67,7 @@ class CartController{
         }
     }
 
-    static async deleteAll(req,res){
+    static async deleteAll(req,res,next){
         try {
             const cart=await Cart.deleteMany()
             if(!cart){
@@ -82,17 +83,34 @@ class CartController{
 
   static async getOne(req,res){
     try {
-      const idParams=req.params.id
-      if(idParams.length !== 24 || idParams.length <24){
-        return errormessage(res,401,`Invalid ID`)
-      }
-      const cart=await Cart.findById(idParams)
-      if(!cart){
-        return errormessage(res,404,`Cart Not Found`)
-      }
-      else{
-        return successmessage(res,200,`Cart Successfuly Retrieved`,cart)
-      }
+      const decodedtoken=req.headers['electronic']
+      const userCart=jwtDecode(decodedtoken)
+      const users=userCart.user._id
+      const cart=await Cart.find()
+      const carrtmap=cart.map((pro)=>{
+        return(pro!==(user => user.user === users))
+      })
+      console.log(carrtmap)
+      // const userId = req.user.userId;
+      // const userCart = data.data.find(user => user.user === userId);
+  
+      // if (userCart) {
+      //     res.json(userCart.products);
+      // } else {
+      //     res.status(404).send('User not found or no products in cart');
+      // }
+
+      // const idParams=req.params.id
+      // if(idParams.length !== 24 || idParams.length <24){
+      //   return errormessage(res,401,`Invalid ID`)
+      // }
+      // const cart=await Cart.findById(idParams)
+      // if(!cart){
+      //   return errormessage(res,404,`Cart Not Found`)
+      // }
+      // else{
+      //   return successmessage(res,200,`Cart Successfuly Retrieved`,cart)
+      // }
     } catch (error) {
       return errormessage(res,500,`error ${error}`)
     }
