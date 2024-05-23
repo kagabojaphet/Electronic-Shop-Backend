@@ -83,33 +83,11 @@ class CartController{
 
   static async getOne(req,res){
       try {
-      // Find user's cart
       const cart = await Cart.findOne({ user: req.user._id }).populate('products.productName');
       if (!cart) {
           return res.status(404).json({ message: "Cart not found" });
       }
       res.json(cart.products);
-  
-      // const userId = req.user.userId;
-      // const userCart = data.data.find(user => user.user === userId);
-  
-      // if (userCart) {
-      //     res.json(userCart.products);
-      // } else {
-      //     res.status(404).send('User not found or no products in cart');
-      // }
-
-      // const idParams=req.params.id
-      // if(idParams.length !== 24 || idParams.length <24){
-      //   return errormessage(res,401,`Invalid ID`)
-      // }
-      // const cart=await Cart.findById(idParams)
-      // if(!cart){
-      //   return errormessage(res,404,`Cart Not Found`)
-      // }
-      // else{
-      //   return successmessage(res,200,`Cart Successfuly Retrieved`,cart)
-      // }
     } catch (error) {
       return errormessage(res,500,`error ${error}`)
     }
