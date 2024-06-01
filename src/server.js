@@ -11,10 +11,12 @@ dotenv.config()
 app.use(cors());
 app.use(bodyParser.json())
 app.use("/api/v1",router)
+app.use(express.static("client"));
 
 
 const port=process.env.PORT
 const database=process.env.DATABASE
+
 
 app.listen(port,()=>{
     console.log(`Port running on....${port}`)
